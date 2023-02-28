@@ -1,0 +1,5 @@
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+export PATH="~/.local/bin:$PATH"
+export GOPATH="$HOME/go"
+export PATH="$PATH:${GOPATH//://bin:}/bin"

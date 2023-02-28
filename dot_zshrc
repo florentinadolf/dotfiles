@@ -109,9 +109,8 @@ export SCREENDIR=$HOME/.screen
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ll='ls -alGh --color=auto'
-if [[ -x $(which helm3) ]]
+if [[ -x $(which helm) ]]
 then
-alias helm='helm3'
 source <(helm completion zsh)
 fi
 if [[ -x $(which kubectl) ]]
@@ -124,19 +123,15 @@ alias kctx='kubectl ctx'
 alias kubectx='kubectl ctx'
 fi
 if uname -r |grep -q microsoft; then
-export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
-if ! ss -a | grep -q "$SSH_AUTH_SOCK"; then
-  rm -f "$SSH_AUTH_SOCK"
-  wsl2_ssh_pageant_bin="$HOME/.ssh/wsl2-ssh-pageant.exe"
-  if test -x "$wsl2_ssh_pageant_bin"; then
-    (setsid nohup socat UNIX-LISTEN:"$SSH_AUTH_SOCK,fork" EXEC:"$wsl2_ssh_pageant_bin" >/dev/null 2>&1 &)
-  else
-    echo >&2 "WARNING: $wsl2_ssh_pageant_bin is not executable."
+  export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
+  if ! ss -a | grep -q "$SSH_AUTH_SOCK"; then
+    rm -f "$SSH_AUTH_SOCK"
+    wsl2_ssh_pageant_bin="$HOME/.ssh/wsl2-ssh-pageant.exe"
+    if test -x "$wsl2_ssh_pageant_bin"; then
+      (setsid nohup socat UNIX-LISTEN:"$SSH_AUTH_SOCK,fork" EXEC:"$wsl2_ssh_pageant_bin" >/dev/null 2>&1 &)
+    else
+      echo >&2 "WARNING: $wsl2_ssh_pageant_bin is not executable."
+    fi
+    unset wsl2_ssh_pageant_bin
   fi
-  unset wsl2_ssh_pageant_bin
 fi
-fi
-export PATH="~/.local/bin:$PATH"
-export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-export GOPATH="$HOME/go"
-export PATH="$PATH:${GOPATH//://bin:}/bin"
