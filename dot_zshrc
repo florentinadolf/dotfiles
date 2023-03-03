@@ -70,7 +70,7 @@ ZSH_THEME="agnoster"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(aliases ansible branch brew colorize compleat dash docker docker-compose emoji gpg-agent helm history kubectl macos macports nmap npm operator-sdk golang python terraform vscode xcode zsh-navigation-tools git zsh-syntax-highlighting)
+plugins=(aliases ansible branch brew colorize compleat docker-compose emoji helm history kubectl nmap golang terraform zsh-navigation-tools zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -106,32 +106,16 @@ export SCREENDIR=$HOME/.screen
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ll='ls -alGh --color=auto'
-if [[ -x $(which helm) ]]
-then
-source <(helm completion zsh)
-fi
-if [[ -x $(which kubectl) ]]
-then
-source <(kubectl completion zsh)
-complete -F __start_kubectl k
-alias kns='kubectl ns'
-alias kubens='kubectl ns'
-alias kctx='kubectl ctx'
-alias kubectx='kubectl ctx'
-fi
-if uname -r |grep -q microsoft; then
-  export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
-  if ! ss -a | grep -q "$SSH_AUTH_SOCK"; then
-    rm -f "$SSH_AUTH_SOCK"
-    wsl2_ssh_pageant_bin="$HOME/.ssh/wsl2-ssh-pageant.exe"
-    if test -x "$wsl2_ssh_pageant_bin"; then
-      (setsid nohup socat UNIX-LISTEN:"$SSH_AUTH_SOCK,fork" EXEC:"$wsl2_ssh_pageant_bin" >/dev/null 2>&1 &)
-    else
-      echo >&2 "WARNING: $wsl2_ssh_pageant_bin is not executable."
-    fi
-    unset wsl2_ssh_pageant_bin
+export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
+if ! ss -a | grep -q "$SSH_AUTH_SOCK"; then
+  rm -f "$SSH_AUTH_SOCK"
+  wsl2_ssh_pageant_bin="$HOME/.ssh/wsl2-ssh-pageant.exe"
+  if test -x "$wsl2_ssh_pageant_bin"; then
+    (setsid nohup socat UNIX-LISTEN:"$SSH_AUTH_SOCK,fork" EXEC:"$wsl2_ssh_pageant_bin" >/dev/null 2>&1 &)
+  else
+    echo >&2 "WARNING: $wsl2_ssh_pageant_bin is not executable."
   fi
+  unset wsl2_ssh_pageant_bin
 fi
+source "/home/linuxbrew/.linuxbrew/opt/kube-ps1/share/kube-ps1.sh"
+PS1='$(kube_ps1)'$PS1
